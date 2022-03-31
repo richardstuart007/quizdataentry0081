@@ -107,7 +107,11 @@ export default function RowList() {
     //  Process promise
     //
     if (g_log1) console.log('getRowAllData')
-    var myPromiseGet = MyQueryPromise(rowSelectAll())
+    const props = {
+      sqlOrderBy: ' order by qid',
+      sqlWhere: ' where qid >= 218'
+    }
+    var myPromiseGet = MyQueryPromise(rowSelectAll(props))
     //
     //  Initial status
     //
@@ -124,11 +128,16 @@ export default function RowList() {
       //
       //  Update Table
       //
+      if (g_log1) console.log('Update records')
       setRecords(data)
       //
-      //  Return Data
+      //  Filter
       //
-      return data
+      handleSearch()
+      //
+      //  Return
+      //
+      return
     })
     //
     //  Return Promise
@@ -168,9 +177,9 @@ export default function RowList() {
       //
       getRowAllData()
       //
-      //  Return Data
+      //  Return
       //
-      return data
+      return
     })
     //
     //  Return Promise
@@ -184,7 +193,7 @@ export default function RowList() {
     //
     //  Data Received
     //
-    if (g_log1) console.log('Upsert Row ', data)
+    if (g_log1) console.log('insertRowData ', data)
     //
     //  Strip out qid as it will be populated by Insert
     //
@@ -232,9 +241,9 @@ export default function RowList() {
       //
       getRowAllData()
       //
-      //  Return Data
+      //  Return
       //
-      return data
+      return
     })
     //
     //  Return Promise
@@ -248,7 +257,7 @@ export default function RowList() {
     //
     //  Data Received
     //
-    if (g_log1) console.log('updateRow Row ', data)
+    if (g_log1) console.log('updateRowData Row ', data)
     //
     //  Process promise
     //
@@ -291,9 +300,9 @@ export default function RowList() {
       //
       getRowAllData()
       //
-      //  Return Data
+      //  Return
       //
-      return data
+      return
     })
     //
     //  Return Promise
@@ -341,6 +350,7 @@ export default function RowList() {
   //  Search/Filter
   //
   const handleSearch = () => {
+    if (g_log1) console.log('handleSearch')
     setFilterFn({
       fn: items => {
         //
@@ -396,6 +406,7 @@ export default function RowList() {
   //  Update Database
   //
   const addOrEdit = (row, resetForm) => {
+    if (g_log1) console.log('addOrEdit')
     row.qid === 0 ? insertRowData(row) : updateRowData(row)
     resetForm()
     setRecordForEdit(null)

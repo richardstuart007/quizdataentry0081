@@ -9,13 +9,16 @@ import debugSettings from '../../debug/debugSettings'
 //
 // Debug Settings
 //
-const g_log1 = debugSettings(true)
+const g_log1 = debugSettings()
 //=====================================================================================
 export default function MyInput(props) {
   if (g_log1) console.log('Start MyInput')
-
+  //
+  //  Deconstruct
+  //
   const { name, label, value, error = null, onChange, ...other } = props
-  if (g_log1) console.log('name ', name, 'value ', value, 'label ', label)
+  if (g_log1) console.log('props: ', props)
+  //
   return (
     <TextField
       variant='outlined'

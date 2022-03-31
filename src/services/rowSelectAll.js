@@ -13,13 +13,17 @@ const sqlClient = 'Quiz/rowSelectAll'
 const { URL_BASE } = require('./constants.js')
 const { URL_QUESTIONS } = require('./constants.js')
 const { SQL_TABLE } = require('./constants.js')
+const { SQL_ROWS } = require('./constants.js')
 //
 // Debug Settings
 //
-const g_log1 = debugSettings()
+const g_log1 = debugSettings(true)
 //===================================================================================
-async function rowSelectAll() {
+async function rowSelectAll(props) {
   if (g_log1) console.log('Start rowSelectAll')
+  const { sqlOrderBy, sqlWhere } = props
+  if (g_log1) console.log('sqlOrderBy: ', sqlOrderBy)
+  if (g_log1) console.log('sqlWhere: ', sqlWhere)
   //
   //  Database Update
   //
@@ -29,13 +33,24 @@ async function rowSelectAll() {
       //  Setup actions
       //
       const method = 'post'
-      const sqlWhere = `qid >= 218 `
+      //
+      //  sqlString
+      //
+      let sqlString = `* from ${SQL_TABLE}`
+      if (sqlWhere) sqlString = sqlString.concat(sqlWhere)
+      if (sqlOrderBy) sqlString = sqlString.concat(sqlOrderBy)
+      sqlString = sqlString.concat(` FETCH NEXT ${SQL_ROWS} ROWS ONLY`)
+      //
+      //  Body
+      //
       const body = {
         sqlClient: sqlClient,
-        sqlTable: SQL_TABLE,
-        sqlAction: 'SELECT',
-        sqlWhere: sqlWhere
+        sqlString: sqlString,
+        sqlAction: 'SELECTSQL'
       }
+      //
+      //  URL
+      //
       const URL = URL_BASE + URL_QUESTIONS
       if (g_log1) console.log('URL ', URL)
       //
