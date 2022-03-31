@@ -29,7 +29,7 @@ async function rowSelectAll() {
       //  Setup actions
       //
       const method = 'post'
-      const sqlWhere = `qid > 0 `
+      const sqlWhere = `qid >= 218 `
       const body = {
         sqlClient: sqlClient,
         sqlTable: SQL_TABLE,

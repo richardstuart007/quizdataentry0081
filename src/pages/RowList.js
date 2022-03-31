@@ -17,6 +17,8 @@ import SearchIcon from '@mui/icons-material/Search'
 import AddIcon from '@mui/icons-material/Add'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import CloseIcon from '@mui/icons-material/Close'
+import RefreshIcon from '@mui/icons-material/Refresh'
+import FilterListIcon from '@mui/icons-material/FilterList'
 //
 //  Pages
 //
@@ -315,6 +317,7 @@ export default function RowList() {
   })
   const [openPopup, setOpenPopup] = useState(false)
   const [searchType, setSearchType] = useState('qdetail')
+  const [searchValue, setSearchValue] = useState('')
   //.............................................................................
   //
   //  Notification
@@ -337,9 +340,7 @@ export default function RowList() {
   //
   //  Search/Filter
   //
-  const handleSearch = e => {
-    const searchValue = e.target.value.toLowerCase()
-    console.log(searchValue)
+  const handleSearch = () => {
     setFilterFn({
       fn: items => {
         //
@@ -356,32 +357,32 @@ export default function RowList() {
             break
           case 'qowner':
             itemsFilter = items.filter(x =>
-              x.qowner.toLowerCase().includes(searchValue)
+              x.qowner.toLowerCase().includes(searchValue.toLowerCase())
             )
             break
           case 'qkey':
             itemsFilter = items.filter(x =>
-              x.qkey.toLowerCase().includes(searchValue)
+              x.qkey.toLowerCase().includes(searchValue.toLowerCase())
             )
             break
           case 'qdetail':
             itemsFilter = items.filter(x =>
-              x.qdetail.toLowerCase().includes(searchValue)
+              x.qdetail.toLowerCase().includes(searchValue.toLowerCase())
             )
             break
           case 'qgroup1':
             itemsFilter = items.filter(x =>
-              x.qgroup1.toLowerCase().includes(searchValue)
+              x.qgroup1.toLowerCase().includes(searchValue.toLowerCase())
             )
             break
           case 'qgroup2':
             itemsFilter = items.filter(x =>
-              x.qgroup2.toLowerCase().includes(searchValue)
+              x.qgroup2.toLowerCase().includes(searchValue.toLowerCase())
             )
             break
           case 'qgroup3':
             itemsFilter = items.filter(x =>
-              x.qgroup3.toLowerCase().includes(searchValue)
+              x.qgroup3.toLowerCase().includes(searchValue.toLowerCase())
             )
             break
           default:
@@ -457,6 +458,8 @@ export default function RowList() {
         <Toolbar>
           <MyInput
             label='Search'
+            name='Search'
+            value={searchValue}
             className={classes.searchInput}
             InputProps={{
               startAdornment: (
@@ -465,8 +468,7 @@ export default function RowList() {
                 </InputAdornment>
               )
             }}
-            onChange={handleSearch}
-            onClick={handleSearch}
+            onChange={e => setSearchValue(e.target.value)}
           />
           <Box className={classes.searchInputTypeBox}>
             <MySelect
@@ -478,6 +480,19 @@ export default function RowList() {
               options={searchTypeOptions}
             />
           </Box>
+          <MyButton
+            text='Filter'
+            variant='outlined'
+            startIcon={<FilterListIcon />}
+            onClick={handleSearch}
+          />
+          <MyButton
+            text='Refresh'
+            variant='outlined'
+            startIcon={<RefreshIcon />}
+            onClick={getRowAllData}
+          />
+
           <MyButton
             text='Add New'
             variant='outlined'
