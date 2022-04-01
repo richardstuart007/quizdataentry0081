@@ -95,7 +95,7 @@ const searchTypeOptions = [
 //
 // Debug Settings
 //
-const g_log1 = debugSettings(true)
+const g_log1 = debugSettings()
 //=====================================================================================
 export default function RowList() {
   if (g_log1) console.log('Start RowList')

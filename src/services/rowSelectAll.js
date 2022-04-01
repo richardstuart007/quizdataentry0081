@@ -17,7 +17,7 @@ const { SQL_ROWS } = require('./constants.js')
 //
 // Debug Settings
 //
-const g_log1 = debugSettings(true)
+const g_log1 = debugSettings()
 //===================================================================================
 async function rowSelectAll(props) {
   if (g_log1) console.log('Start rowSelectAll')
