@@ -17,3 +17,5 @@ export const getGroup2Collection = () => [
   { id: 'Bidding', title: 'Bidding' },
   { id: 'Play', title: 'Play' }
 ]
+
+export const getGroup3Collection = () => [{ id: '', title: 'none' }]

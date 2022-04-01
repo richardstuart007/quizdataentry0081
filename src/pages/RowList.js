@@ -55,8 +55,8 @@ import debugSettings from '../debug/debugSettings'
 //
 const useStyles = makeStyles(theme => ({
   pageContent: {
-    margin: theme.spacing(2),
-    padding: theme.spacing(3)
+    margin: theme.spacing(1),
+    padding: theme.spacing(1)
   },
   searchInput: {
     width: '40%'
@@ -109,7 +109,7 @@ export default function RowList() {
     if (g_log1) console.log('getRowAllData')
     const props = {
       sqlOrderBy: ' order by qid',
-      sqlWhere: ' where qid >= 218'
+      sqlWhere: ' where qid > 0'
     }
     var myPromiseGet = MyQueryPromise(rowSelectAll(props))
     //

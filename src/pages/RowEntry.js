@@ -33,7 +33,8 @@ const initialFValues = {
   qbad2: '',
   qbad3: '',
   qgroup1: '',
-  qgroup2: ''
+  qgroup2: '',
+  qgroup3: ''
 }
 //
 // Debug Settings
@@ -127,7 +128,7 @@ export default function RowEntry(props) {
   return (
     <MyForm onSubmit={handleSubmit}>
       <Grid container>
-        <Grid item xs={5}>
+        <Grid item xs={4}>
           <MySelect
             name='qowner'
             label='Owner'
@@ -139,7 +140,7 @@ export default function RowEntry(props) {
           />
         </Grid>
 
-        <Grid item xs={5}>
+        <Grid item xs={4}>
           <MyInput
             name='qkey'
             label='Key'
@@ -226,7 +227,7 @@ export default function RowEntry(props) {
           />
         </Grid>
 
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <MySelect
             name='qgroup1'
             label='Group 1'
@@ -236,7 +237,7 @@ export default function RowEntry(props) {
             options={QuizServices.getGroup1Collection()}
           />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <MySelect
             name='qgroup2'
             label='Group 2'
@@ -244,6 +245,16 @@ export default function RowEntry(props) {
             onChange={handleInputChange}
             error={errors.qgroup2}
             options={QuizServices.getGroup2Collection()}
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <MySelect
+            name='qgroup3'
+            label='Group 3'
+            value={values.qgroup3}
+            onChange={handleInputChange}
+            error={errors.qgroup3}
+            options={QuizServices.getGroup3Collection()}
           />
         </Grid>
 

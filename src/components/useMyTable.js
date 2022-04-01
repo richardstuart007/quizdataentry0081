@@ -20,14 +20,16 @@ import debugSettings from '../debug/debugSettings'
 //
 const useStyles = makeStyles(theme => ({
   table: {
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(1),
     '& thead th': {
       fontWeight: '600',
       color: theme.palette.primary.main,
-      backgroundColor: theme.palette.primary.light
+      backgroundColor: theme.palette.primary.light,
+      padding: theme.spacing(0.5)
     },
     '& tbody td': {
-      fontWeight: '300'
+      fontWeight: '300',
+      padding: theme.spacing(0.5)
     },
     '& tbody tr:hover': {
       backgroundColor: '#fffbf2',
@@ -49,7 +51,7 @@ export default function useMyTable(records, headCells, filterFn) {
   //
   //  State
   //
-  const pages = [5, 10, 50]
+  const pages = [10, 20, 50]
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(pages[page])
   const [order, setOrder] = useState()
