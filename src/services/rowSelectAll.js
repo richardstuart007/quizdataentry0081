@@ -39,7 +39,7 @@ async function rowSelectAll(props) {
       let sqlString = `* from ${SQL_TABLE}`
       if (sqlWhere) sqlString = sqlString.concat(sqlWhere)
       if (sqlOrderBy) sqlString = sqlString.concat(sqlOrderBy)
-      sqlString = sqlString.concat(` FETCH NEXT ${SQL_ROWS} ROWS ONLY`)
+      sqlString = sqlString.concat(` FETCH FIRST ${SQL_ROWS} ROWS ONLY`)
       //
       //  Body
       //
