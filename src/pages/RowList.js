@@ -235,6 +235,11 @@ export default function RowList() {
         //
         const rtn_qid = data[0].qid
         if (g_log1) console.log(`Row (${rtn_qid}) UPSERTED in Database`)
+        //
+        //  Update record for edit with returned data
+        //
+        setRecordForEdit(data[0])
+        if (g_log1) console.log(`recordForEdit `, recordForEdit)
       }
       //
       //  Update State - refetch data
@@ -408,9 +413,9 @@ export default function RowList() {
   const addOrEdit = (row, resetForm) => {
     if (g_log1) console.log('addOrEdit')
     row.qid === 0 ? insertRowData(row) : updateRowData(row)
-    resetForm()
-    setRecordForEdit(null)
-    setOpenPopup(false)
+    // resetForm()
+    // setRecordForEdit(null)
+    // setOpenPopup(false)
     setNotify({
       isOpen: true,
       message: 'Submitted Successfully',

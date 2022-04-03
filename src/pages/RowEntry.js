@@ -74,7 +74,6 @@ export default function RowEntry(props) {
 
     if ('qgroup1' in fieldValues)
       errorsUpd.qgroup1 = fieldValues.qgroup1 ? '' : 'This field is required.'
-
     //
     //  Set the errors
     //
@@ -100,7 +99,22 @@ export default function RowEntry(props) {
     e.preventDefault()
     if (validate()) {
       addOrEdit(values, resetForm)
+      if (g_log1) console.log(values.qid)
     }
+  }
+  //...................................................................................
+  //.  Copy Row
+  //...................................................................................
+  const handleCopy = e => {
+    e.preventDefault()
+    //
+    //  Reset the form in Add mode
+    //
+    let valuesUpd = { ...values }
+    valuesUpd.qid = 0
+    setValues({
+      ...valuesUpd
+    })
   }
   //...................................................................................
   //.  Main Line
@@ -116,12 +130,18 @@ export default function RowEntry(props) {
       })
     // eslint-disable-next-line
   }, [recordForEdit])
+  if (g_log1) console.log('recordForEdit ', recordForEdit)
   //
   //  Disable entry of Owner/Key on update, allow for Entry
   //
-  let disabled = false
-  if (values.qid !== 0) disabled = true
-  if (g_log1) console.log('disabled input ', disabled)
+  let actionUpdate = false
+  if (values.qid !== 0) actionUpdate = true
+  if (g_log1) console.log('actionUpdate input ', actionUpdate)
+  //
+  //  Button Text
+  //
+  let submitButtonText
+  actionUpdate ? (submitButtonText = 'Update') : (submitButtonText = 'Add')
   //...................................................................................
   //.  Render the form
   //...................................................................................
@@ -135,7 +155,7 @@ export default function RowEntry(props) {
             value={values.qowner}
             onChange={handleInputChange}
             error={errors.qowner}
-            disabled={disabled}
+            disabled={actionUpdate}
             options={QuizServices.getOwnerCollection()}
           />
         </Grid>
@@ -147,11 +167,11 @@ export default function RowEntry(props) {
             value={values.qkey}
             onChange={handleInputChange}
             error={errors.qkey}
-            disabled={disabled}
+            disabled={actionUpdate}
           />
         </Grid>
 
-        {disabled ? (
+        {actionUpdate ? (
           <Grid item xs={2}>
             <MyInput name='qid' label='ID' value={values.qid} disabled={true} />
           </Grid>
@@ -260,9 +280,17 @@ export default function RowEntry(props) {
 
         <Grid item xs={6}>
           <div>
-            <MyButton type='submit' text='Submit' />
+            <MyButton type='submit' text={submitButtonText} />
           </div>
         </Grid>
+
+        {actionUpdate ? (
+          <Grid item xs={6}>
+            <div>
+              <MyButton text='Copy' onClick={handleCopy} />
+            </div>
+          </Grid>
+        ) : null}
       </Grid>
     </MyForm>
   )
