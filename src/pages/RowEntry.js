@@ -26,20 +26,19 @@ const initialFValues = {
   qowner: '',
   qkey: '',
   qdetail: '',
-  qhl1: '',
-  qhl2: '',
   qcorrect: '',
   qbad1: '',
   qbad2: '',
   qbad3: '',
   qgroup1: '',
   qgroup2: '',
-  qgroup3: ''
+  qgroup3: '',
+  qrefs: ''
 }
 //
 // Debug Settings
 //
-const g_log1 = debugSettings()
+const g_log1 = debugSettings(true)
 //=====================================================================================
 export default function RowEntry(props) {
   const { addOrEdit, recordForEdit } = props
@@ -81,7 +80,7 @@ export default function RowEntry(props) {
       ...errorsUpd
     })
     //
-    //  Check if every element within the errosUpd object is blank, then return true (valid), but only on submit when the fieldValues=values
+    //  Check if every element within the errorsUpd object is blank, then return true (valid), but only on submit when the fieldValues=values
     //
     if (fieldValues === values)
       return Object.values(errorsUpd).every(x => x === '')
@@ -97,9 +96,21 @@ export default function RowEntry(props) {
   //...................................................................................
   const handleSubmit = e => {
     e.preventDefault()
+    //
+    //  Validate & Update
+    //
     if (validate()) {
-      addOrEdit(values, resetForm)
-      if (g_log1) console.log(values.qid)
+      if (g_log1) console.log('values ', values)
+      const UpdateValues = { ...values }
+      //
+      //  Refs are array elements, so need brackets
+      //
+      if (values.qrefs) UpdateValues.qrefs = `{${values.qrefs}}`
+      //
+      //  Update database
+      //
+      addOrEdit(UpdateValues, resetForm)
+      if (g_log1) console.log('UpdateValues ', UpdateValues)
     }
   }
   //...................................................................................
@@ -229,21 +240,11 @@ export default function RowEntry(props) {
 
         <Grid item xs={12}>
           <MyInput
-            name='qhl1'
-            label='HyperLink 1'
-            value={values.qhl1}
+            name='qrefs'
+            label='References'
+            value={values.qrefs}
             onChange={handleInputChange}
-            error={errors.qhl1}
-          />
-        </Grid>
-
-        <Grid item xs={12}>
-          <MyInput
-            name='qhl2'
-            label='HyperLink 2'
-            value={values.qhl2}
-            onChange={handleInputChange}
-            error={errors.qhl2}
+            error={errors.qrefs}
           />
         </Grid>
 

@@ -95,7 +95,7 @@ const searchTypeOptions = [
 //
 // Debug Settings
 //
-const g_log1 = debugSettings()
+const g_log1 = debugSettings(true)
 //=====================================================================================
 export default function RowList() {
   if (g_log1) console.log('Start RowList')
@@ -193,7 +193,7 @@ export default function RowList() {
     //
     //  Data Received
     //
-    if (g_log1) console.log('insertRowData ', data)
+    if (g_log1) console.log('insertRowData data ', data)
     //
     //  Strip out qid as it will be populated by Insert
     //
