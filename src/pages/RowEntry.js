@@ -15,9 +15,12 @@ import MyInput from '../components/controls/MyInput'
 import MySelect from '../components/controls/MySelect'
 import { useMyForm, MyForm } from '../components/useMyForm'
 //
-//  Data Services
+//  Constants
 //
-import * as QuizServices from '../services/QuizServices'
+const { OWNER } = require('../datastatic/DataOwner.js')
+const { GROUP1 } = require('../datastatic/DataGroup1.js')
+const { GROUP2 } = require('../datastatic/DataGroup2.js')
+const { GROUP3 } = require('../datastatic/DataGroup3.js')
 //
 //  Form Initial Values
 //
@@ -42,7 +45,6 @@ const g_log1 = debugSettings(true)
 //=====================================================================================
 export default function RowEntry(props) {
   const { addOrEdit, recordForEdit } = props
-
   //...................................................................................
   //
   // Validate the fields
@@ -167,7 +169,7 @@ export default function RowEntry(props) {
             onChange={handleInputChange}
             error={errors.qowner}
             disabled={actionUpdate}
-            options={QuizServices.getOwnerCollection()}
+            options={OWNER}
           />
         </Grid>
 
@@ -255,7 +257,7 @@ export default function RowEntry(props) {
             value={values.qgroup1}
             onChange={handleInputChange}
             error={errors.qgroup1}
-            options={QuizServices.getGroup1Collection()}
+            options={GROUP1}
           />
         </Grid>
         <Grid item xs={4}>
@@ -265,7 +267,7 @@ export default function RowEntry(props) {
             value={values.qgroup2}
             onChange={handleInputChange}
             error={errors.qgroup2}
-            options={QuizServices.getGroup2Collection()}
+            options={GROUP2}
           />
         </Grid>
         <Grid item xs={4}>
@@ -275,7 +277,7 @@ export default function RowEntry(props) {
             value={values.qgroup3}
             onChange={handleInputChange}
             error={errors.qgroup3}
-            options={QuizServices.getGroup3Collection()}
+            options={GROUP3}
           />
         </Grid>
 
