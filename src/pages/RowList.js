@@ -45,7 +45,8 @@ import MyQueryPromise from '../services/MyQueryPromise'
 import rowUpsert from '../services/rowUpsert'
 import rowUpdate from '../services/rowUpdate'
 import rowDelete from '../services/rowDelete'
-import rowSelectAll from '../services/rowSelectAll'
+import rowSelect from '../services/rowSelect'
+
 //
 //  Debug Settings
 //
@@ -71,6 +72,11 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 //
+//  Questions Table
+//
+const { SQL_TABLE_QUESTIONS } = require('../services/constants.js')
+const { SQL_ROWS } = require('../services/constants.js')
+//
 //  Table Heading
 //
 const headCells = [
@@ -95,7 +101,7 @@ const searchTypeOptions = [
 //
 // Debug Settings
 //
-const g_log1 = debugSettings(true)
+const g_log1 = debugSettings()
 //=====================================================================================
 export default function RowList() {
   if (g_log1) console.log('Start RowList')
@@ -107,11 +113,13 @@ export default function RowList() {
     //  Process promise
     //
     if (g_log1) console.log('getRowAllData')
+    const sqlRows = `FETCH FIRST ${SQL_ROWS} ROWS ONLY`
     const props = {
+      sqlTable: SQL_TABLE_QUESTIONS,
       sqlOrderBy: ' order by qid',
-      sqlWhere: ' where qid > 0'
+      sqlRows: sqlRows
     }
-    var myPromiseGet = MyQueryPromise(rowSelectAll(props))
+    var myPromiseGet = MyQueryPromise(rowSelect(props))
     //
     //  Initial status
     //
@@ -152,7 +160,14 @@ export default function RowList() {
     //  Process promise
     //
     if (g_log1) console.log('deleteRowData')
-    var myPromiseDelete = MyQueryPromise(rowDelete(qid))
+    //
+    //  Populate Props
+    //
+    const props = {
+      sqlTable: SQL_TABLE_QUESTIONS,
+      sqlWhere: `qid = ${qid}`
+    }
+    var myPromiseDelete = MyQueryPromise(rowDelete(props))
     //
     //  Initial status
     //
@@ -200,10 +215,18 @@ export default function RowList() {
     let { qid, ...rowData } = data
     if (g_log1) console.log('Upsert Database rowData ', rowData)
     //
+    //  Build Props
+    //
+    const props = {
+      sqlTable: SQL_TABLE_QUESTIONS,
+      sqlKeyName: ['qowner', 'qkey'],
+      sqlRow: rowData
+    }
+    //
     //  Process promise
     //
     if (g_log1) console.log('rowUpsert')
-    var myPromiseInsert = MyQueryPromise(rowUpsert(rowData))
+    var myPromiseInsert = MyQueryPromise(rowUpsert(props))
     //
     //  Initial status
     //
@@ -264,10 +287,18 @@ export default function RowList() {
     //
     if (g_log1) console.log('updateRowData Row ', data)
     //
+    //  Populate Props
+    //
+    const props = {
+      sqlTable: SQL_TABLE_QUESTIONS,
+      sqlWhere: `qid = ${data.qid}`,
+      sqlRow: data
+    }
+    //
     //  Process promise
     //
     if (g_log1) console.log('rowUpdate')
-    var myPromiseUpdate = MyQueryPromise(rowUpdate(data))
+    var myPromiseUpdate = MyQueryPromise(rowUpdate(props))
     //
     //  Initial status
     //

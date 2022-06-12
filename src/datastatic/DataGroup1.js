@@ -10,5 +10,6 @@ exports.GROUP1 = [
   { id: 'Cue1st2ndControls', title: 'Cue 1st and 2nd Controls' },
   { id: 'BergenRaises', title: 'Bergen Raises' },
   { id: 'MichaelsCueBid', title: 'Michaels Cue Bid' },
-  { id: 'Points Schmoints', title: 'Points Schmoints' }
+  { id: 'Points Schmoints', title: 'Points Schmoints' },
+  { id: 'NZBStayman', title: 'NZB Stayman' }
 ]

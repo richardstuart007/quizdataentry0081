@@ -9,18 +9,16 @@ import debugSettings from '../debug/debugSettings'
 //
 // Constants
 //
-const sqlClient = 'Quiz/rowUpdate'
+const sqlClient = 'rowUpdate'
 const { URL_BASE } = require('./constants.js')
-const { URL_QUESTIONS } = require('./constants.js')
-const { SQL_TABLE } = require('./constants.js')
+const { URL_TABLES } = require('./constants.js')
 //
 // Debug Settings
 //
 const g_log1 = debugSettings()
 //===================================================================================
-async function rowUpdate(row) {
-  if (g_log1) console.log('Start rowUpdate')
-  //
+async function rowUpdate(props) {
+  //--------------------------------------------------------------------
   //  Database Update
   //
   const updateDatabase = async () => {
@@ -29,22 +27,21 @@ async function rowUpdate(row) {
       //  Setup actions
       //
       const method = 'post'
-      const sqlWhere = `qid = ${row.qid}`
       //
       //  Strip out qid
       //
-      let { qid, ...rowData } = row
+      let { qid, ...rowData } = sqlRow
       //
       //  Body
       //
       const body = {
         sqlClient: sqlClient,
-        sqlTable: SQL_TABLE,
+        sqlTable: sqlTable,
         sqlAction: 'UPDATE',
         sqlWhere: sqlWhere,
         sqlRow: rowData
       }
-      const URL = URL_BASE + URL_QUESTIONS
+      const URL = URL_BASE + URL_TABLES
       if (g_log1) console.log('URL ', URL)
       //
       //  SQL database
@@ -72,7 +69,11 @@ async function rowUpdate(row) {
   //-  Main Line
   //--------------------------------------------------------------------
   if (g_log1) console.log('Start rowUpdate')
-  if (g_log1) console.log('Row ', row)
+  //
+  //  Deconstruct
+  //
+  const { sqlTable, sqlWhere, sqlRow } = props
+  if (g_log1) console.log('props: ', props)
   //
   // Database Update
   //

@@ -9,22 +9,16 @@ import debugSettings from '../debug/debugSettings'
 //
 // Constants
 //
-const sqlClient = 'Quiz/rowSelectAll'
+const sqlClient = 'rowSelect'
 const { URL_BASE } = require('./constants.js')
-const { URL_QUESTIONS } = require('./constants.js')
-const { SQL_TABLE } = require('./constants.js')
-const { SQL_ROWS } = require('./constants.js')
+const { URL_TABLES } = require('./constants.js')
 //
 // Debug Settings
 //
 const g_log1 = debugSettings()
 //===================================================================================
-async function rowSelectAll(props) {
-  if (g_log1) console.log('Start rowSelectAll')
-  const { sqlOrderBy, sqlWhere } = props
-  if (g_log1) console.log('sqlOrderBy: ', sqlOrderBy)
-  if (g_log1) console.log('sqlWhere: ', sqlWhere)
-  //
+async function rowSelect(props) {
+  //--------------------------------------------------------------------
   //  Database Update
   //
   const updateDatabase = async () => {
@@ -36,10 +30,10 @@ async function rowSelectAll(props) {
       //
       //  sqlString
       //
-      let sqlString = `* from ${SQL_TABLE}`
-      if (sqlWhere) sqlString = sqlString.concat(sqlWhere)
-      if (sqlOrderBy) sqlString = sqlString.concat(sqlOrderBy)
-      sqlString = sqlString.concat(` FETCH FIRST ${SQL_ROWS} ROWS ONLY`)
+      let sqlString = `* from ${sqlTable}`
+      if (sqlWhere) sqlString = sqlString.concat(' ' + sqlWhere)
+      if (sqlOrderBy) sqlString = sqlString.concat(' ' + sqlOrderBy)
+      if (sqlRows) sqlString = sqlString.concat(' ' + sqlRows)
       //
       //  Body
       //
@@ -51,7 +45,7 @@ async function rowSelectAll(props) {
       //
       //  URL
       //
-      const URL = URL_BASE + URL_QUESTIONS
+      const URL = URL_BASE + URL_TABLES
       if (g_log1) console.log('URL ', URL)
       //
       //  SQL database
@@ -73,7 +67,12 @@ async function rowSelectAll(props) {
   //--------------------------------------------------------------------
   //-  Main Line
   //--------------------------------------------------------------------
-  if (g_log1) console.log('Start rowSelectAll')
+  if (g_log1) console.log('Start rowSelect')
+  //
+  //  Deconstruct props
+  //
+  if (g_log1) console.log('props: ', props)
+  const { sqlTable, sqlOrderBy, sqlWhere, sqlRows } = props
   //
   // Database Update
   //
@@ -85,4 +84,4 @@ async function rowSelectAll(props) {
   return promise
 }
 
-export default rowSelectAll
+export default rowSelect

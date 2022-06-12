@@ -21,17 +21,22 @@ export function useMyForm(initialFValues, validateOnChange = false, validate) {
   //
   const [values, setValues] = useState(initialFValues)
   const [errors, setErrors] = useState({})
+  //...................................................................................
   //
   //  Handle change and Validate
   //
   const handleInputChange = e => {
     const { name, value } = e.target
+    if (g_log1) console.log({ name }, { value })
+    if (g_log1) console.log({ [name]: value })
+
     setValues({
       ...values,
       [name]: value
     })
     if (validateOnChange) validate({ [name]: value })
   }
+  //...................................................................................
   //
   //  Reset the form to Initial Values
   //
@@ -39,9 +44,11 @@ export function useMyForm(initialFValues, validateOnChange = false, validate) {
     setValues(initialFValues)
     setErrors({})
   }
+  //...................................................................................
   //
   //  Return Values
   //
+  if (g_log1) console.log({ values })
   return {
     values,
     setValues,

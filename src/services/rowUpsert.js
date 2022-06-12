@@ -9,18 +9,16 @@ import debugSettings from '../debug/debugSettings'
 //
 // Constants
 //
-const sqlClient = 'Quiz/rowUpsert'
+const sqlClient = 'rowUpsert'
 const { URL_BASE } = require('./constants.js')
-const { URL_QUESTIONS } = require('./constants.js')
-const { SQL_TABLE } = require('./constants.js')
+const { URL_TABLES } = require('./constants.js')
 //
 // Debug Settings
 //
 const g_log1 = debugSettings()
 //===================================================================================
-async function rowUpsert(row) {
-  if (g_log1) console.log('Start rowUpsert')
-  //
+async function rowUpsert(props) {
+  //--------------------------------------------------------------------
   //  Database Update
   //
   const updateDatabase = async () => {
@@ -31,12 +29,12 @@ async function rowUpsert(row) {
       const method = 'post'
       const body = {
         sqlClient: sqlClient,
-        sqlTable: SQL_TABLE,
+        sqlTable: sqlTable,
         sqlAction: 'UPSERT',
-        sqlKeyName: ['qowner', 'qkey'],
-        sqlRow: row
+        sqlKeyName: sqlKeyName,
+        sqlRow: sqlRow
       }
-      const URL = URL_BASE + URL_QUESTIONS
+      const URL = URL_BASE + URL_TABLES
       if (g_log1) console.log('URL ', URL)
       //
       //  SQL database
@@ -50,7 +48,7 @@ async function rowUpsert(row) {
         throw Error('No data received')
       }
       const rowReturned = resultData[0]
-      if (g_log1) console.log('row ', rowReturned)
+      if (g_log1) console.log('rowReturned ', rowReturned)
       return resultData
       //
       // Errors
@@ -64,7 +62,11 @@ async function rowUpsert(row) {
   //-  Main Line
   //--------------------------------------------------------------------
   if (g_log1) console.log('Start rowUpsert')
-  if (g_log1) console.log('Row ', row)
+  //
+  //  Deconstruct
+  //
+  const { sqlTable, sqlKeyName, sqlRow } = props
+  if (g_log1) console.log('props: ', props)
   //
   // Database Update
   //

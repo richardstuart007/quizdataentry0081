@@ -447,5 +447,14 @@ exports.LINKS = [
     rlink: 'https://www.youtube.com/watch?v=zsGeGlYC7v0',
     rwho: 'WBF',
     rtype: 'youtube'
+  },
+  {
+    rid: 57,
+    rref: 'NZBridgeStayman',
+    rdesc: 'NZ Bridge Stayman',
+    rlink:
+      'https://www.nzbridge.co.nz/user/inline/2160/NZB%20Improver%2001%20-%20Quiz%20Answers.pdf',
+    rwho: 'NZB',
+    rtype: 'webdoc'
   }
 ]

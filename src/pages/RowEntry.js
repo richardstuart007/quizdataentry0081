@@ -1,12 +1,17 @@
 //
 //  Libraries
 //
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Grid } from '@mui/material'
 //
 //  Debug Settings
 //
 import debugSettings from '../debug/debugSettings'
+//
+//  Pages
+//
+import HandEntry from './HandEntry'
+import BiddingEntry from './BiddingEntry'
 //
 //  Controls
 //
@@ -14,6 +19,10 @@ import MyButton from '../components/controls/MyButton'
 import MyInput from '../components/controls/MyInput'
 import MySelect from '../components/controls/MySelect'
 import { useMyForm, MyForm } from '../components/useMyForm'
+//
+//  Components
+//
+import Popup from '../components/Popup'
 //
 //  Constants
 //
@@ -41,10 +50,11 @@ const initialFValues = {
 //
 // Debug Settings
 //
-const g_log1 = debugSettings(true)
+const g_log1 = debugSettings()
 //=====================================================================================
 export default function RowEntry(props) {
   const { addOrEdit, recordForEdit } = props
+
   //...................................................................................
   //
   // Validate the fields
@@ -133,6 +143,11 @@ export default function RowEntry(props) {
   //.  Main Line
   //...................................................................................
   //
+  //  State
+  //
+  const [openPopupHand, setOpenPopupHand] = useState(false)
+  const [openPopupBidding, setOpenPopupBidding] = useState(false)
+  //
   //  On change of record, set State
   //
   useEffect(() => {
@@ -159,142 +174,190 @@ export default function RowEntry(props) {
   //.  Render the form
   //...................................................................................
   return (
-    <MyForm onSubmit={handleSubmit}>
-      <Grid container>
-        <Grid item xs={4}>
-          <MySelect
-            name='qowner'
-            label='Owner'
-            value={values.qowner}
-            onChange={handleInputChange}
-            error={errors.qowner}
-            disabled={actionUpdate}
-            options={OWNER}
-          />
-        </Grid>
-
-        <Grid item xs={4}>
-          <MyInput
-            name='qkey'
-            label='Key'
-            value={values.qkey}
-            onChange={handleInputChange}
-            error={errors.qkey}
-            disabled={actionUpdate}
-          />
-        </Grid>
-
-        {actionUpdate ? (
+    <>
+      <MyForm onSubmit={handleSubmit}>
+        <Grid container>
+          <Grid item xs={4}>
+            <MySelect
+              name='qowner'
+              label='Owner'
+              value={values.qowner}
+              onChange={handleInputChange}
+              error={errors.qowner}
+              disabled={actionUpdate}
+              options={OWNER}
+            />
+          </Grid>
+          {/*------------------------------------------------------------------------------ */}
+          <Grid item xs={4}>
+            <MyInput
+              name='qkey'
+              label='Key'
+              value={values.qkey}
+              onChange={handleInputChange}
+              error={errors.qkey}
+              disabled={actionUpdate}
+            />
+          </Grid>
+          {/*------------------------------------------------------------------------------ */}
+          {actionUpdate ? (
+            <Grid item xs={2}>
+              <MyInput
+                name='qid'
+                label='ID'
+                value={values.qid}
+                disabled={true}
+              />
+            </Grid>
+          ) : null}
+          {/*------------------------------------------------------------------------------ */}
+          <Grid item xs={12}>
+            <MyInput
+              name='qdetail'
+              label='Question'
+              value={values.qdetail}
+              onChange={handleInputChange}
+              error={errors.qdetail}
+            />
+          </Grid>
+          {/*------------------------------------------------------------------------------ */}
+          <Grid item xs={12}>
+            <MyInput
+              name='qcorrect'
+              label='Correct Answer'
+              value={values.qcorrect}
+              onChange={handleInputChange}
+              error={errors.qcorrect}
+            />
+          </Grid>
+          {/*------------------------------------------------------------------------------ */}
+          <Grid item xs={12}>
+            <MyInput
+              name='qbad1'
+              label='Bad Answer 1'
+              value={values.qbad1}
+              onChange={handleInputChange}
+              error={errors.qbad1}
+            />
+          </Grid>
+          {/*------------------------------------------------------------------------------ */}
+          <Grid item xs={12}>
+            <MyInput
+              name='qbad2'
+              label='Bad Answer 2'
+              value={values.qbad2}
+              onChange={handleInputChange}
+              error={errors.qbad2}
+            />
+          </Grid>
+          {/*------------------------------------------------------------------------------ */}
+          <Grid item xs={12}>
+            <MyInput
+              name='qbad3'
+              label='Bad Answer 3'
+              value={values.qbad3}
+              onChange={handleInputChange}
+              error={errors.qbad3}
+            />
+          </Grid>
+          {/*------------------------------------------------------------------------------ */}
+          <Grid item xs={12}>
+            <MyInput
+              name='qrefs'
+              label='References'
+              value={values.qrefs}
+              onChange={handleInputChange}
+              error={errors.qrefs}
+            />
+          </Grid>
+          {/*------------------------------------------------------------------------------ */}
+          <Grid item xs={4}>
+            <MySelect
+              key={GROUP1.g1id}
+              name='qgroup1'
+              label='Group 1'
+              value={values.qgroup1}
+              onChange={handleInputChange}
+              error={errors.qgroup1}
+              options={GROUP1}
+            />
+          </Grid>
+          {/*------------------------------------------------------------------------------ */}
+          <Grid item xs={4}>
+            <MySelect
+              key={GROUP2.g2id}
+              name='qgroup2'
+              label='Group 2'
+              value={values.qgroup2}
+              onChange={handleInputChange}
+              error={errors.qgroup2}
+              options={GROUP2}
+            />
+          </Grid>
+          {/*------------------------------------------------------------------------------ */}
+          <Grid item xs={4}>
+            <MySelect
+              key={GROUP3.g3id}
+              name='qgroup3'
+              label='Group 3'
+              value={values.qgroup3}
+              onChange={handleInputChange}
+              error={errors.qgroup3}
+              options={GROUP3}
+            />
+          </Grid>
+          {/*------------------------------------------------------------------------------ */}
           <Grid item xs={2}>
-            <MyInput name='qid' label='ID' value={values.qid} disabled={true} />
-          </Grid>
-        ) : null}
-
-        <Grid item xs={12}>
-          <MyInput
-            name='qdetail'
-            label='Question'
-            value={values.qdetail}
-            onChange={handleInputChange}
-            error={errors.qdetail}
-          />
-        </Grid>
-
-        <Grid item xs={12}>
-          <MyInput
-            name='qcorrect'
-            label='Correct Answer'
-            value={values.qcorrect}
-            onChange={handleInputChange}
-            error={errors.qcorrect}
-          />
-        </Grid>
-
-        <Grid item xs={12}>
-          <MyInput
-            name='qbad1'
-            label='Bad Answer 1'
-            value={values.qbad1}
-            onChange={handleInputChange}
-            error={errors.qbad1}
-          />
-        </Grid>
-
-        <Grid item xs={12}>
-          <MyInput
-            name='qbad2'
-            label='Bad Answer 2'
-            value={values.qbad2}
-            onChange={handleInputChange}
-            error={errors.qbad2}
-          />
-        </Grid>
-
-        <Grid item xs={12}>
-          <MyInput
-            name='qbad3'
-            label='Bad Answer 3'
-            value={values.qbad3}
-            onChange={handleInputChange}
-            error={errors.qbad3}
-          />
-        </Grid>
-
-        <Grid item xs={12}>
-          <MyInput
-            name='qrefs'
-            label='References'
-            value={values.qrefs}
-            onChange={handleInputChange}
-            error={errors.qrefs}
-          />
-        </Grid>
-
-        <Grid item xs={4}>
-          <MySelect
-            name='qgroup1'
-            label='Group 1'
-            value={values.qgroup1}
-            onChange={handleInputChange}
-            error={errors.qgroup1}
-            options={GROUP1}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <MySelect
-            name='qgroup2'
-            label='Group 2'
-            value={values.qgroup2}
-            onChange={handleInputChange}
-            error={errors.qgroup2}
-            options={GROUP2}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <MySelect
-            name='qgroup3'
-            label='Group 3'
-            value={values.qgroup3}
-            onChange={handleInputChange}
-            error={errors.qgroup3}
-            options={GROUP3}
-          />
-        </Grid>
-
-        <Grid item xs={6}>
-          <div>
             <MyButton type='submit' text={submitButtonText} />
-          </div>
-        </Grid>
-
-        {actionUpdate ? (
-          <Grid item xs={6}>
-            <div>
-              <MyButton text='Copy' onClick={handleCopy} />
-            </div>
           </Grid>
-        ) : null}
-      </Grid>
-    </MyForm>
+          {/*------------------------------------------------------------------------------ */}
+          {actionUpdate ? (
+            <Grid item xs={2}>
+              <MyButton text='Copy' onClick={handleCopy} />
+            </Grid>
+          ) : null}
+          {/*------------------------------------------------------------------------------ */}
+          {actionUpdate ? (
+            <Grid item xs={2}>
+              <MyButton
+                text='Hands'
+                onClick={() => {
+                  setOpenPopupHand(true)
+                }}
+              />
+            </Grid>
+          ) : null}
+          {/*------------------------------------------------------------------------------ */}
+          {actionUpdate ? (
+            <Grid item xs={2}>
+              <MyButton
+                text='Bidding'
+                onClick={() => {
+                  setOpenPopupBidding(true)
+                }}
+              />
+            </Grid>
+          ) : null}
+          {/*------------------------------------------------------------------------------ */}
+        </Grid>
+      </MyForm>
+      {/*------------------------------------------------------------------------------ */}
+      <Popup
+        title='Hands Form'
+        openPopup={openPopupHand}
+        setOpenPopup={setOpenPopupHand}
+      >
+        <HandEntry hid={values.qid} />
+      </Popup>
+      {/*------------------------------------------------------------------------------ */}
+      <Popup
+        title='Bidding Form'
+        openPopup={openPopupBidding}
+        setOpenPopup={setOpenPopupBidding}
+      >
+        <BiddingEntry bid={values.qid} />
+      </Popup>
+      {/*------------------------------------------------------------------------------ */}
+    </>
   )
 }

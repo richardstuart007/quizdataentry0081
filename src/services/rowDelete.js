@@ -9,18 +9,16 @@ import debugSettings from '../debug/debugSettings'
 //
 // Constants
 //
-const sqlClient = 'Quiz/rowDelete'
+const sqlClient = 'rowDelete'
 const { URL_BASE } = require('./constants.js')
-const { URL_QUESTIONS } = require('./constants.js')
-const { SQL_TABLE } = require('./constants.js')
+const { URL_TABLES } = require('./constants.js')
 //
 // Debug Settings
 //
 const g_log1 = debugSettings()
 //===================================================================================
-async function rowDelete(qid) {
-  if (g_log1) console.log('Start rowDelete')
-  //
+async function rowDelete(props) {
+  //--------------------------------------------------------------------
   //  Database Update
   //
   const updateDatabase = async () => {
@@ -29,14 +27,13 @@ async function rowDelete(qid) {
       //  Setup actions
       //
       const method = 'delete'
-      const sqlWhere = `qid = ${qid}`
       const body = {
         sqlClient: sqlClient,
-        sqlTable: SQL_TABLE,
+        sqlTable: sqlTable,
         sqlAction: 'DELETE',
         sqlWhere: sqlWhere
       }
-      const URL = URL_BASE + URL_QUESTIONS
+      const URL = URL_BASE + URL_TABLES
       if (g_log1) console.log('URL ', URL)
       //
       //  SQL database
@@ -64,7 +61,11 @@ async function rowDelete(qid) {
   //-  Main Line
   //--------------------------------------------------------------------
   if (g_log1) console.log('Start rowDelete')
-  if (g_log1) console.log('qid ', qid)
+  //
+  //  Deconstruct
+  //
+  const { sqlTable, sqlWhere } = props
+  if (g_log1) console.log('props: ', props)
   //
   // Database Update
   //
