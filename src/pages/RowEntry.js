@@ -3,6 +3,7 @@
 //
 import { useEffect, useState } from 'react'
 import { Grid } from '@mui/material'
+import { useSnapshot } from 'valtio'
 //
 //  Debug Settings
 //
@@ -24,12 +25,9 @@ import { useMyForm, MyForm } from '../components/useMyForm'
 //
 import Popup from '../components/Popup'
 //
-//  Constants
+//  Utilities
 //
-const { OWNER } = require('../datastatic/DataOwner.js')
-const { GROUP1 } = require('../datastatic/DataGroup1.js')
-const { GROUP2 } = require('../datastatic/DataGroup2.js')
-const { GROUP3 } = require('../datastatic/DataGroup3.js')
+import { ValtioStore } from '../services/ValtioStore'
 //
 //  Form Initial Values
 //
@@ -45,22 +43,63 @@ const initialFValues = {
   qgroup1: '',
   qgroup2: '',
   qgroup3: '',
-  qrefs: ''
+  qrefs1: '',
+  qrefs2: ''
 }
 //
 // Debug Settings
 //
-const g_log1 = debugSettings()
+const debugLog = debugSettings()
+const debugFunStartSetting = false
+const debugFunEndSetting = false
+const debugModule = 'RowEntry'
+let debugStack = []
 //=====================================================================================
 export default function RowEntry(props) {
   const { addOrEdit, recordForEdit } = props
-
+  //.............................................................................
+  //.  Debug Logging
+  //.............................................................................
+  const debugLogging = (objtext, obj) => {
+    if (debugLog) {
+      //
+      //  Object passed
+      //
+      let JSONobj = ''
+      if (obj) {
+        JSONobj = JSON.parse(JSON.stringify(obj))
+      }
+      //
+      //  Output values
+      //
+      console.log('VALUES: Stack ', debugStack, objtext, JSONobj)
+    }
+  }
+  //.............................................................................
+  //.  function start
+  //.............................................................................
+  const debugFunStart = funname => {
+    debugStack.push(funname)
+    if (debugFunStartSetting)
+      console.log('Stack: debugFunStart ==> ', funname, debugStack)
+  }
+  //.............................................................................
+  //.  function End
+  //.............................................................................
+  const debugFunEnd = () => {
+    if (debugStack.length > 1) {
+      const funname = debugStack.pop()
+      if (debugFunEndSetting)
+        console.log('Stack: debugFunEnd <==== ', funname, debugStack)
+    }
+  }
   //...................................................................................
   //
   // Validate the fields
   //
   const validate = (fieldValues = values) => {
-    if (g_log1) console.log(fieldValues)
+    debugFunStart('validate')
+    debugLogging(fieldValues)
     //
     //  Load previous errors
     //
@@ -94,8 +133,12 @@ export default function RowEntry(props) {
     //
     //  Check if every element within the errorsUpd object is blank, then return true (valid), but only on submit when the fieldValues=values
     //
-    if (fieldValues === values)
+    if (fieldValues === values) {
+      debugFunEnd()
       return Object.values(errorsUpd).every(x => x === '')
+    }
+
+    debugFunEnd()
   }
   //...................................................................................
   //
@@ -107,28 +150,35 @@ export default function RowEntry(props) {
   //.  Submit form
   //...................................................................................
   const handleSubmit = e => {
+    debugFunStart('handleSubmit')
     e.preventDefault()
     //
     //  Validate & Update
     //
     if (validate()) {
-      if (g_log1) console.log('values ', values)
-      const UpdateValues = { ...values }
+      debugLogging('values ', values)
+      const { qrefs1, qrefs2, ...UpdateValues } = { ...values }
+      debugLogging('UpdateValues ', UpdateValues)
       //
       //  Refs are array elements, so need brackets
       //
-      if (values.qrefs) UpdateValues.qrefs = `{${values.qrefs}}`
+      const qrefs = `{ ${values.qrefs1}, ${values.qrefs2} }`
+      debugLogging('qrefs ', qrefs)
+      UpdateValues.qrefs = qrefs
       //
       //  Update database
       //
+      debugLogging('UpdateValues ', UpdateValues)
       addOrEdit(UpdateValues, resetForm)
-      if (g_log1) console.log('UpdateValues ', UpdateValues)
+
+      debugFunEnd()
     }
   }
   //...................................................................................
   //.  Copy Row
   //...................................................................................
   const handleCopy = e => {
+    debugFunStart('handleCopy')
     e.preventDefault()
     //
     //  Reset the form in Add mode
@@ -138,33 +188,62 @@ export default function RowEntry(props) {
     setValues({
       ...valuesUpd
     })
+
+    debugFunEnd()
   }
   //...................................................................................
   //.  Main Line
   //...................................................................................
+  debugStack = []
+  debugFunStart(debugModule)
   //
   //  State
   //
   const [openPopupHand, setOpenPopupHand] = useState(false)
   const [openPopupBidding, setOpenPopupBidding] = useState(false)
   //
+  //  Define the ValtioStore
+  //
+  const snapShot = useSnapshot(ValtioStore)
+  let OptionsOwner = snapShot.v_OptionsOwner
+  debugLogging('OptionsOwner ', OptionsOwner)
+  let OptionsGroup1 = snapShot.v_OptionsGroup1
+  debugLogging('OptionsGroup1 ', OptionsGroup1)
+  let OptionsGroup2 = snapShot.v_OptionsGroup2
+  let OptionsGroup3 = snapShot.v_OptionsGroup3
+  let OptionsRefLinks = snapShot.v_OptionsRefLinks
+  //
   //  On change of record, set State
   //
   useEffect(() => {
-    if (g_log1) console.log('useEffect')
-    if (recordForEdit !== null)
-      setValues({
-        ...recordForEdit
-      })
+    debugLogging('useEffect')
+    if (recordForEdit !== null) debugLogging('recordForEdit ', recordForEdit)
+    //
+    //  Refs are an array which must be split into qrefs1 & qrefs2
+    //
+    let updrecordForEdit = recordForEdit
+    let qrefs1 = 'None'
+    let qrefs2 = 'None'
+    if (recordForEdit.qrefs[0]) qrefs1 = recordForEdit.qrefs[0]
+    if (recordForEdit.qrefs[1]) qrefs2 = recordForEdit.qrefs[1]
+    updrecordForEdit.qrefs1 = qrefs1
+    updrecordForEdit.qrefs2 = qrefs2
+    debugLogging('updrecordForEdit ', updrecordForEdit)
+    //
+    //  Update form values
+    //
+    setValues({
+      ...updrecordForEdit
+    })
     // eslint-disable-next-line
   }, [recordForEdit])
-  if (g_log1) console.log('recordForEdit ', recordForEdit)
+  debugLogging('recordForEdit ', recordForEdit)
   //
   //  Disable entry of Owner/Key on update, allow for Entry
   //
   let actionUpdate = false
   if (values.qid !== 0) actionUpdate = true
-  if (g_log1) console.log('actionUpdate input ', actionUpdate)
+  debugLogging('actionUpdate input ', actionUpdate)
   //
   //  Button Text
   //
@@ -179,13 +258,14 @@ export default function RowEntry(props) {
         <Grid container>
           <Grid item xs={4}>
             <MySelect
+              key={OptionsOwner.id}
               name='qowner'
               label='Owner'
               value={values.qowner}
               onChange={handleInputChange}
               error={errors.qowner}
               disabled={actionUpdate}
-              options={OWNER}
+              options={OptionsOwner}
             />
           </Grid>
           {/*------------------------------------------------------------------------------ */}
@@ -261,49 +341,62 @@ export default function RowEntry(props) {
             />
           </Grid>
           {/*------------------------------------------------------------------------------ */}
-          <Grid item xs={12}>
-            <MyInput
-              name='qrefs'
-              label='References'
-              value={values.qrefs}
+          <Grid item xs={6}>
+            <MySelect
+              key={OptionsRefLinks.id}
+              name='qrefs1'
+              label='Reference 1'
+              value={values.qrefs1}
               onChange={handleInputChange}
-              error={errors.qrefs}
+              error={errors.qrefs1}
+              options={OptionsRefLinks}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <MySelect
+              key={OptionsRefLinks.id}
+              name='qrefs2'
+              label='Reference 2'
+              value={values.qrefs2}
+              onChange={handleInputChange}
+              error={errors.qrefs2}
+              options={OptionsRefLinks}
             />
           </Grid>
           {/*------------------------------------------------------------------------------ */}
           <Grid item xs={4}>
             <MySelect
-              key={GROUP1.g1id}
+              key={OptionsGroup1.id}
               name='qgroup1'
               label='Group 1'
               value={values.qgroup1}
               onChange={handleInputChange}
               error={errors.qgroup1}
-              options={GROUP1}
+              options={OptionsGroup1}
             />
           </Grid>
           {/*------------------------------------------------------------------------------ */}
           <Grid item xs={4}>
             <MySelect
-              key={GROUP2.g2id}
+              key={OptionsGroup2.id}
               name='qgroup2'
               label='Group 2'
               value={values.qgroup2}
               onChange={handleInputChange}
               error={errors.qgroup2}
-              options={GROUP2}
+              options={OptionsGroup2}
             />
           </Grid>
           {/*------------------------------------------------------------------------------ */}
           <Grid item xs={4}>
             <MySelect
-              key={GROUP3.g3id}
+              key={OptionsGroup3.id}
               name='qgroup3'
               label='Group 3'
               value={values.qgroup3}
               onChange={handleInputChange}
               error={errors.qgroup3}
-              options={GROUP3}
+              options={OptionsGroup3}
             />
           </Grid>
           {/*------------------------------------------------------------------------------ */}

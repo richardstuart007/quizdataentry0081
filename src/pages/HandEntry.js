@@ -81,7 +81,6 @@ let g_valAvailCard
 let g_valSuit
 let g_valHand
 let g_errorsUpd
-
 //
 //  Hands Table
 //
@@ -154,6 +153,7 @@ export default function HandEntry(props) {
   //.............................................................................
   const dbRowUnPack = row => {
     debugFunStart('dbRowUnPack')
+    debugLogging('row ', row)
     //
     //  Initialise dbValues
     //
@@ -389,16 +389,20 @@ export default function HandEntry(props) {
     //  Resolve Status
     //
     myPromiseGet.then(function (data) {
+      debugFunStart('myPromiseGet')
       debugLogging('myPromiseGet Final fulfilled')
+      debugLogging('data ', data)
       //
       //  Update record to edit
       //
-      if (data !== null) {
-        debugLogging('myPromiseGet data ', data[0])
+      if (data[0]) {
+        const row = data[0]
+        debugLogging('myPromiseGet data ', row)
         //
         //  Unpack data from database & update form values
         //
-        dbRowUnPack(data[0])
+
+        dbRowUnPack(row)
       }
       //
       //  Return
@@ -437,23 +441,24 @@ export default function HandEntry(props) {
     //  Resolve Status
     //
     myPromiseInsert.then(function (data) {
+      debugFunStart('myPromiseInsert')
       debugLogging('myPromiseInsert Final fulfilled')
       //
       //  No data returned
       //
-      if (!data) {
+      if (!data[0]) {
         console.log('ERROR: No Data returned')
         throw Error
       } else {
         //
         //  Get ID
         //
-        const rtn_hid = data[0].hid
-        debugLogging(`Row (${rtn_hid}) UPSERTED in Database `, data[0])
+        const row = data[0]
+        debugLogging(`Row (${row.hid}) UPSERTED in Database `, row)
         //
         //  Unpack data from database & update form values
         //
-        dbRowUnPack(data)
+        dbRowUnPack(row)
       }
       //
       //  Return
@@ -484,6 +489,7 @@ export default function HandEntry(props) {
     //  Resolve Status
     //
     myPromiseDelete.then(function (data) {
+      debugFunStart('myPromiseDelete')
       debugLogging('myPromiseDelete Final fulfilled')
 
       const rtn_hid = data[0].hid
@@ -840,6 +846,7 @@ export default function HandEntry(props) {
       debugFunEnd()
       return Object.values(g_errorsUpd).every(x => x === '')
     }
+    debugFunEnd()
   }
   //...................................................................................
   //
@@ -854,6 +861,7 @@ export default function HandEntry(props) {
   //.  Submit form
   //...................................................................................
   const handleSubmit = e => {
+    debugFunStart(handleSubmit)
     e.preventDefault()
     //
     //  Validate & Update
@@ -864,6 +872,7 @@ export default function HandEntry(props) {
       //
       upsertRowData()
     }
+    debugFunEnd()
   }
 
   //...................................................................................

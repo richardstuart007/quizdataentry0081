@@ -46,11 +46,16 @@ import rowUpsert from '../services/rowUpsert'
 import rowUpdate from '../services/rowUpdate'
 import rowDelete from '../services/rowDelete'
 import rowSelect from '../services/rowSelect'
-
+import OptionsOwner from '../services/OptionsOwner'
+import OptionsGroup1 from '../services/OptionsGroup1'
+import OptionsGroup2 from '../services/OptionsGroup2'
+import OptionsGroup3 from '../services/OptionsGroup3'
+import OptionsRefLinks from '../services/OptionsRefLinks'
 //
 //  Debug Settings
 //
 import debugSettings from '../debug/debugSettings'
+
 //
 //  Styles
 //
@@ -101,18 +106,57 @@ const searchTypeOptions = [
 //
 // Debug Settings
 //
-const g_log1 = debugSettings()
+const debugLog = debugSettings()
+const debugFunStartSetting = false
+const debugFunEndSetting = false
+const debugModule = 'RowList'
+let debugStack = []
 //=====================================================================================
 export default function RowList() {
-  if (g_log1) console.log('Start RowList')
+  //.............................................................................
+  //.  Debug Logging
+  //.............................................................................
+  const debugLogging = (objtext, obj) => {
+    if (debugLog) {
+      //
+      //  Object passed
+      //
+      let JSONobj = ''
+      if (obj) {
+        JSONobj = JSON.parse(JSON.stringify(obj))
+      }
+      //
+      //  Output values
+      //
+      console.log('VALUES: Stack ', debugStack, objtext, JSONobj)
+    }
+  }
+  //.............................................................................
+  //.  function start
+  //.............................................................................
+  const debugFunStart = funname => {
+    debugStack.push(funname)
+    if (debugFunStartSetting)
+      console.log('Stack: debugFunStart ==> ', funname, debugStack)
+  }
+  //.............................................................................
+  //.  function End
+  //.............................................................................
+  const debugFunEnd = () => {
+    if (debugStack.length > 1) {
+      const funname = debugStack.pop()
+      if (debugFunEndSetting)
+        console.log('Stack: debugFunEnd <==== ', funname, debugStack)
+    }
+  }
   //.............................................................................
   //.  GET ALL
   //.............................................................................
   const getRowAllData = () => {
+    debugFunStart('getRowAllData')
     //
     //  Process promise
     //
-    if (g_log1) console.log('getRowAllData')
     const sqlRows = `FETCH FIRST ${SQL_ROWS} ROWS ONLY`
     const props = {
       sqlTable: SQL_TABLE_QUESTIONS,
@@ -121,22 +165,13 @@ export default function RowList() {
     }
     var myPromiseGet = MyQueryPromise(rowSelect(props))
     //
-    //  Initial status
-    //
-    if (g_log1)
-      console.log('myPromiseGet Initial pending:', myPromiseGet.isPending())
-    //
     //  Resolve Status
     //
     myPromiseGet.then(function (data) {
-      if (g_log1) console.log('myPromiseGet ', myPromiseGet)
-      if (g_log1)
-        console.log('myPromiseGet Final fulfilled:', myPromiseGet.isFulfilled())
-      if (g_log1) console.log('myPromiseGet data ', data)
+      debugLogging('myPromiseGet data ', data)
       //
       //  Update Table
       //
-      if (g_log1) console.log('Update records')
       setRecords(data)
       //
       //  Filter
@@ -145,21 +180,20 @@ export default function RowList() {
       //
       //  Return
       //
+      debugFunEnd()
       return
     })
     //
     //  Return Promise
     //
+    debugFunEnd()
     return myPromiseGet
   }
   //.............................................................................
   //.  DELETE
   //.............................................................................
   const deleteRowData = qid => {
-    //
-    //  Process promise
-    //
-    if (g_log1) console.log('deleteRowData')
+    debugFunStart('deleteRowData')
     //
     //  Populate Props
     //
@@ -169,24 +203,10 @@ export default function RowList() {
     }
     var myPromiseDelete = MyQueryPromise(rowDelete(props))
     //
-    //  Initial status
-    //
-    if (g_log1)
-      console.log(
-        'myPromiseDelete Initial pending:',
-        myPromiseDelete.isPending()
-      )
-    //
     //  Resolve Status
     //
     myPromiseDelete.then(function (data) {
-      if (g_log1) console.log('myPromiseDelete myPromise ', myPromiseDelete)
-      if (g_log1)
-        console.log(
-          'myPromiseDelete Final fulfilled:',
-          myPromiseDelete.isFulfilled()
-        )
-      if (g_log1) console.log('myPromiseDelete data ', data)
+      debugLogging('myPromiseDelete data ', data)
       //
       //  Update State - refetch data
       //
@@ -194,26 +214,29 @@ export default function RowList() {
       //
       //  Return
       //
+      debugFunEnd()
       return
     })
     //
     //  Return Promise
     //
+    debugFunEnd()
     return myPromiseDelete
   }
   //.............................................................................
   //.  INSERT
   //.............................................................................
   const insertRowData = data => {
+    debugFunStart('insertRowData')
     //
     //  Data Received
     //
-    if (g_log1) console.log('insertRowData data ', data)
+    debugLogging('insertRowData data ', data)
     //
     //  Strip out qid as it will be populated by Insert
     //
     let { qid, ...rowData } = data
-    if (g_log1) console.log('Upsert Database rowData ', rowData)
+    debugLogging('Upsert Database rowData ', rowData)
     //
     //  Build Props
     //
@@ -225,27 +248,13 @@ export default function RowList() {
     //
     //  Process promise
     //
-    if (g_log1) console.log('rowUpsert')
+    debugLogging('rowUpsert')
     var myPromiseInsert = MyQueryPromise(rowUpsert(props))
-    //
-    //  Initial status
-    //
-    if (g_log1)
-      console.log(
-        'myPromiseInsert Initial pending:',
-        myPromiseInsert.isPending()
-      )
     //
     //  Resolve Status
     //
     myPromiseInsert.then(function (data) {
-      if (g_log1) console.log('myPromiseInsert ', myPromiseInsert)
-      if (g_log1)
-        console.log(
-          'myPromiseInsert Final fulfilled:',
-          myPromiseInsert.isFulfilled()
-        )
-      if (g_log1) console.log('myPromiseInsert data ', data)
+      debugLogging('myPromiseInsert data ', data)
       //
       //  No data returned
       //
@@ -257,12 +266,12 @@ export default function RowList() {
         //  Get ID
         //
         const rtn_qid = data[0].qid
-        if (g_log1) console.log(`Row (${rtn_qid}) UPSERTED in Database`)
+        debugLogging(`Row (${rtn_qid}) UPSERTED in Database`)
         //
         //  Update record for edit with returned data
         //
         setRecordForEdit(data[0])
-        if (g_log1) console.log(`recordForEdit `, recordForEdit)
+        debugLogging(`recordForEdit `, recordForEdit)
       }
       //
       //  Update State - refetch data
@@ -271,21 +280,24 @@ export default function RowList() {
       //
       //  Return
       //
+      debugFunEnd()
       return
     })
     //
     //  Return Promise
     //
+    debugFunEnd()
     return myPromiseInsert
   }
   //.............................................................................
   //.  UPDATE
   //.............................................................................
   const updateRowData = data => {
+    debugFunStart('updateRowData')
     //
     //  Data Received
     //
-    if (g_log1) console.log('updateRowData Row ', data)
+    debugLogging('updateRowData Row ', data)
     //
     //  Populate Props
     //
@@ -297,27 +309,20 @@ export default function RowList() {
     //
     //  Process promise
     //
-    if (g_log1) console.log('rowUpdate')
     var myPromiseUpdate = MyQueryPromise(rowUpdate(props))
     //
     //  Initial status
     //
-    if (g_log1)
-      console.log(
-        'myPromiseUpdate Initial pending:',
-        myPromiseUpdate.isPending()
-      ) //true
+
+    debugLogging(
+      'myPromiseUpdate Initial pending:',
+      myPromiseUpdate.isPending()
+    ) //true
     //
     //  Resolve Status
     //
     myPromiseUpdate.then(function (data) {
-      if (g_log1) console.log('myPromiseUpdate ', myPromiseUpdate)
-      if (g_log1)
-        console.log(
-          'myPromiseUpdate Final fulfilled:',
-          myPromiseUpdate.isFulfilled()
-        ) //true
-      if (g_log1) console.log('myPromiseUpdate data ', data)
+      debugLogging('myPromiseUpdate data ', data)
       //
       //  No data
       //
@@ -329,7 +334,7 @@ export default function RowList() {
         //  Get QID
         //
         const rtn_qid = data[0].qid
-        if (g_log1) console.log(`Row (${rtn_qid}) UPDATED in Database`)
+        debugLogging(`Row (${rtn_qid}) UPDATED in Database`)
       }
       //
       //  Update State - refetch data
@@ -338,11 +343,13 @@ export default function RowList() {
       //
       //  Return
       //
+      debugFunEnd()
       return
     })
     //
     //  Return Promise
     //
+    debugFunEnd()
     return myPromiseUpdate
   }
   //.............................................................................
@@ -363,7 +370,6 @@ export default function RowList() {
   const [openPopup, setOpenPopup] = useState(false)
   const [searchType, setSearchType] = useState('qdetail')
   const [searchValue, setSearchValue] = useState('')
-  //.............................................................................
   //
   //  Notification
   //
@@ -372,7 +378,6 @@ export default function RowList() {
     message: '',
     severity: 'info'
   })
-  //.............................................................................
   //
   //  Confirm Delete dialog box
   //
@@ -386,13 +391,16 @@ export default function RowList() {
   //  Search/Filter
   //
   const handleSearch = () => {
-    if (g_log1) console.log('handleSearch')
+    debugFunStart('handleSearch')
     setFilterFn({
       fn: items => {
         //
         //  Nothing to search, return rows
         //
-        if (searchValue === '') return items
+        if (searchValue === '') {
+          debugFunEnd()
+          return items
+        }
         //
         //  Filter
         //
@@ -433,6 +441,7 @@ export default function RowList() {
             break
           default:
         }
+        debugFunEnd()
         return itemsFilter
       }
     })
@@ -442,30 +451,32 @@ export default function RowList() {
   //  Update Database
   //
   const addOrEdit = (row, resetForm) => {
-    if (g_log1) console.log('addOrEdit')
+    debugFunStart('addOrEdit')
     row.qid === 0 ? insertRowData(row) : updateRowData(row)
-    // resetForm()
-    // setRecordForEdit(null)
-    // setOpenPopup(false)
+
     setNotify({
       isOpen: true,
       message: 'Submitted Successfully',
       severity: 'success'
     })
+    debugFunEnd()
   }
   //.............................................................................
   //
   //  Data Entry Popup
   //
   const openInPopup = row => {
+    debugFunStart('openInPopup')
     setRecordForEdit(row)
     setOpenPopup(true)
+    debugFunEnd()
   }
   //.............................................................................
   //
   //  Delete Row
   //
   const onDelete = qid => {
+    debugFunStart('onDelete')
     setConfirmDialog({
       ...confirmDialog,
       isOpen: false
@@ -476,12 +487,23 @@ export default function RowList() {
       message: 'Deleted Successfully',
       severity: 'error'
     })
+    debugFunEnd()
   }
+
   //...................................................................................
+  //.  Main Line
+  //...................................................................................
+  debugStack = []
+  debugFunStart(debugModule)
   //
   //  Initial Data Load
   //
   useEffect(() => {
+    OptionsOwner()
+    OptionsGroup1()
+    OptionsGroup2()
+    OptionsGroup3()
+    OptionsRefLinks()
     getRowAllData()
     // eslint-disable-next-line
   }, [])
