@@ -55,7 +55,6 @@ import OptionsRefLinks from '../services/OptionsRefLinks'
 //  Debug Settings
 //
 import debugSettings from '../debug/debugSettings'
-
 //
 //  Styles
 //
@@ -311,14 +310,6 @@ export default function RowList() {
     //
     var myPromiseUpdate = MyQueryPromise(rowUpdate(props))
     //
-    //  Initial status
-    //
-
-    debugLogging(
-      'myPromiseUpdate Initial pending:',
-      myPromiseUpdate.isPending()
-    ) //true
-    //
     //  Resolve Status
     //
     myPromiseUpdate.then(function (data) {
@@ -441,6 +432,7 @@ export default function RowList() {
             break
           default:
         }
+        debugLogging('itemsFilter ', itemsFilter)
         debugFunEnd()
         return itemsFilter
       }

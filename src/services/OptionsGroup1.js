@@ -71,7 +71,13 @@ const OptionsGroup1 = () => {
     //
     //  Options
     //
-    let Options = []
+    let Options = [
+      {
+        id: 'None',
+        title: 'None'
+      }
+    ]
+
     data.forEach(item => {
       const itemObj = {
         id: item.g1id,

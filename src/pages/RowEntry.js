@@ -33,18 +33,18 @@ import { ValtioStore } from '../services/ValtioStore'
 //
 const initialFValues = {
   qid: 0,
-  qowner: '',
+  qowner: 'None',
   qkey: '',
   qdetail: '',
   qcorrect: '',
   qbad1: '',
   qbad2: '',
   qbad3: '',
-  qgroup1: '',
-  qgroup2: '',
-  qgroup3: '',
-  qrefs1: '',
-  qrefs2: ''
+  qgroup1: 'None',
+  qgroup2: 'None',
+  qgroup3: 'None',
+  qrefs1: 'None',
+  qrefs2: 'None'
 }
 //
 // Debug Settings
@@ -108,7 +108,8 @@ export default function RowEntry(props) {
     //  Validate current field
     //
     if ('qowner' in fieldValues)
-      errorsUpd.qowner = fieldValues.qowner ? '' : 'This field is required.'
+      errorsUpd.qowner =
+        fieldValues.qowner === 'None' ? 'This field cannot be None' : ''
 
     if ('qkey' in fieldValues)
       errorsUpd.qkey = fieldValues.qkey ? '' : 'This field is required.'
@@ -123,7 +124,8 @@ export default function RowEntry(props) {
       errorsUpd.qbad1 = fieldValues.qbad1 ? '' : 'This field is required.'
 
     if ('qgroup1' in fieldValues)
-      errorsUpd.qgroup1 = fieldValues.qgroup1 ? '' : 'This field is required.'
+      errorsUpd.qgroup1 =
+        fieldValues.qgroup1 === 'None' ? 'This field cannot be None' : ''
     //
     //  Set the errors
     //
@@ -217,24 +219,27 @@ export default function RowEntry(props) {
   //
   useEffect(() => {
     debugLogging('useEffect')
-    if (recordForEdit !== null) debugLogging('recordForEdit ', recordForEdit)
+    debugLogging('recordForEdit ', recordForEdit)
+    let updrecordForEdit = recordForEdit
     //
     //  Refs are an array which must be split into qrefs1 & qrefs2
     //
-    let updrecordForEdit = recordForEdit
-    let qrefs1 = 'None'
-    let qrefs2 = 'None'
-    if (recordForEdit.qrefs[0]) qrefs1 = recordForEdit.qrefs[0]
-    if (recordForEdit.qrefs[1]) qrefs2 = recordForEdit.qrefs[1]
-    updrecordForEdit.qrefs1 = qrefs1
-    updrecordForEdit.qrefs2 = qrefs2
-    debugLogging('updrecordForEdit ', updrecordForEdit)
-    //
-    //  Update form values
-    //
-    setValues({
-      ...updrecordForEdit
-    })
+    if (recordForEdit) {
+      let qrefs1 = 'None'
+      let qrefs2 = 'None'
+      if (recordForEdit.qrefs[0]) qrefs1 = recordForEdit.qrefs[0]
+      if (recordForEdit.qrefs[1]) qrefs2 = recordForEdit.qrefs[1]
+      updrecordForEdit.qrefs1 = qrefs1
+      updrecordForEdit.qrefs2 = qrefs2
+      debugLogging('updrecordForEdit ', updrecordForEdit)
+      //
+      //  Update form values
+      //
+      debugLogging('setValues ', updrecordForEdit)
+      setValues({
+        ...updrecordForEdit
+      })
+    }
     // eslint-disable-next-line
   }, [recordForEdit])
   debugLogging('recordForEdit ', recordForEdit)
@@ -242,7 +247,8 @@ export default function RowEntry(props) {
   //  Disable entry of Owner/Key on update, allow for Entry
   //
   let actionUpdate = false
-  if (values.qid !== 0) actionUpdate = true
+  if (values && values.qid !== 0) actionUpdate = true
+  debugLogging('values ', values)
   debugLogging('actionUpdate input ', actionUpdate)
   //
   //  Button Text
