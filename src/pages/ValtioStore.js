@@ -8,7 +8,12 @@ const ValtioStore = proxy({
   v_OptionsRefLinks: [],
   v_OptionsGroup1: [],
   v_OptionsGroup2: [],
-  v_OptionsGroup3: []
+  v_OptionsGroup3: [],
+  //
+  //  State
+  //
+  v_Page: 'QuestionList',
+  v_PagePrevious: ''
 })
 
 export { ValtioStore }

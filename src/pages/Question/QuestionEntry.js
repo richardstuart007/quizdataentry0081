@@ -7,7 +7,7 @@ import { useSnapshot } from 'valtio'
 //
 //  Debug Settings
 //
-import debugSettings from '../debug/debugSettings'
+import debugSettings from '../../debug/debugSettings'
 //
 //  Pages
 //
@@ -16,18 +16,18 @@ import BiddingEntry from './BiddingEntry'
 //
 //  Controls
 //
-import MyButton from '../components/controls/MyButton'
-import MyInput from '../components/controls/MyInput'
-import MySelect from '../components/controls/MySelect'
-import { useMyForm, MyForm } from '../components/useMyForm'
+import MyButton from '../../components/controls/MyButton'
+import MyInput from '../../components/controls/MyInput'
+import MySelect from '../../components/controls/MySelect'
+import { useMyForm, MyForm } from '../../components/useMyForm'
 //
 //  Components
 //
-import Popup from '../components/Popup'
+import Popup from '../../components/Popup'
 //
 //  Utilities
 //
-import { ValtioStore } from '../services/ValtioStore'
+import { ValtioStore } from '../ValtioStore'
 //
 //  Form Initial Values
 //
@@ -52,10 +52,10 @@ const initialFValues = {
 const debugLog = debugSettings()
 const debugFunStartSetting = false
 const debugFunEndSetting = false
-const debugModule = 'RowEntry'
+const debugModule = 'QuestionEntry'
 let debugStack = []
 //=====================================================================================
-export default function RowEntry(props) {
+export default function QuestionEntry(props) {
   const { addOrEdit, recordForEdit } = props
   //.............................................................................
   //.  Debug Logging
@@ -210,7 +210,6 @@ export default function RowEntry(props) {
   let OptionsOwner = snapShot.v_OptionsOwner
   debugLogging('OptionsOwner ', OptionsOwner)
   let OptionsGroup1 = snapShot.v_OptionsGroup1
-  debugLogging('OptionsGroup1 ', OptionsGroup1)
   let OptionsGroup2 = snapShot.v_OptionsGroup2
   let OptionsGroup3 = snapShot.v_OptionsGroup3
   let OptionsRefLinks = snapShot.v_OptionsRefLinks

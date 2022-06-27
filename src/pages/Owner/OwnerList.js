@@ -22,39 +22,34 @@ import FilterListIcon from '@mui/icons-material/FilterList'
 //
 //  Pages
 //
-import RowEntry from './RowEntry'
+import OwnerEntry from './OwnerEntry'
 //
 //  Controls
 //
-import MyActionButton from '../components/controls/MyActionButton'
-import MyButton from '../components/controls/MyButton'
-import MyInput from '../components/controls/MyInput'
-import MySelect from '../components/controls/MySelect'
+import MyActionButton from '../../components/controls/MyActionButton'
+import MyButton from '../../components/controls/MyButton'
+import MyInput from '../../components/controls/MyInput'
+import MySelect from '../../components/controls/MySelect'
 //
 //  Components
 //
-import Notification from '../components/Notification'
-import ConfirmDialog from '../components/ConfirmDialog'
-import Popup from '../components/Popup'
-import PageHeader from '../components/PageHeader'
-import useMyTable from '../components/useMyTable'
+import Notification from '../../components/Notification'
+import ConfirmDialog from '../../components/ConfirmDialog'
+import Popup from '../../components/Popup'
+import PageHeader from '../../components/PageHeader'
+import useMyTable from '../../components/useMyTable'
 //
 //  Services
 //
-import MyQueryPromise from '../services/MyQueryPromise'
-import rowUpsert from '../services/rowUpsert'
-import rowUpdate from '../services/rowUpdate'
-import rowDelete from '../services/rowDelete'
-import rowSelect from '../services/rowSelect'
-import OptionsOwner from '../services/OptionsOwner'
-import OptionsGroup1 from '../services/OptionsGroup1'
-import OptionsGroup2 from '../services/OptionsGroup2'
-import OptionsGroup3 from '../services/OptionsGroup3'
-import OptionsRefLinks from '../services/OptionsRefLinks'
+import MyQueryPromise from '../../services/MyQueryPromise'
+import rowUpsert from '../../services/rowUpsert'
+import rowUpdate from '../../services/rowUpdate'
+import rowDelete from '../../services/rowDelete'
+import rowSelect from '../../services/rowSelect'
 //
 //  Debug Settings
 //
-import debugSettings from '../debug/debugSettings'
+import debugSettings from '../../debug/debugSettings'
 //
 //  Styles
 //
@@ -76,31 +71,21 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 //
-//  Questions Table
+//  Owners Table
 //
-const { SQL_TABLE_QUESTIONS } = require('../services/constants.js')
-const { SQL_ROWS } = require('../services/constants.js')
+const { SQL_TABLE_OWNER } = require('../../services/constants.js')
+const { SQL_ROWS } = require('../../services/constants.js')
 //
 //  Table Heading
 //
 const headCells = [
-  { id: 'qid', label: 'ID' },
-  { id: 'qowner', label: 'Owner' },
-  { id: 'qkey', label: 'Key' },
-  { id: 'qdetail', label: 'Question' },
-  { id: 'qgroup1', label: 'Group 1' },
-  { id: 'qgroup2', label: 'Group 2' },
-  { id: 'qgroup3', label: 'Group 3' },
+  { id: 'oowner', label: 'Owner' },
+  { id: 'otitle', label: 'Title' },
   { id: 'actions', label: 'Actions', disableSorting: true }
 ]
 const searchTypeOptions = [
-  { id: 'qid', title: 'ID' },
-  { id: 'qowner', title: 'Owner' },
-  { id: 'qkey', title: 'Key' },
-  { id: 'qdetail', title: 'Question' },
-  { id: 'qgroup1', title: 'Group 1' },
-  { id: 'qgroup2', title: 'Group 2' },
-  { id: 'qgroup3', title: 'Group 3' }
+  { id: 'oowner', title: 'Owner' },
+  { id: 'otitle', title: 'Title' }
 ]
 //
 // Debug Settings
@@ -108,10 +93,10 @@ const searchTypeOptions = [
 const debugLog = debugSettings()
 const debugFunStartSetting = false
 const debugFunEndSetting = false
-const debugModule = 'RowList'
+const debugModule = 'OwnerList'
 let debugStack = []
 //=====================================================================================
-export default function RowList() {
+export default function OwnerList() {
   //.............................................................................
   //.  Debug Logging
   //.............................................................................
@@ -158,8 +143,8 @@ export default function RowList() {
     //
     const sqlRows = `FETCH FIRST ${SQL_ROWS} ROWS ONLY`
     const props = {
-      sqlTable: SQL_TABLE_QUESTIONS,
-      sqlOrderBy: ' order by qid',
+      sqlTable: SQL_TABLE_OWNER,
+      sqlOrderBy: ' order by oowner',
       sqlRows: sqlRows
     }
     var myPromiseGet = MyQueryPromise(rowSelect(props))
@@ -191,14 +176,14 @@ export default function RowList() {
   //.............................................................................
   //.  DELETE
   //.............................................................................
-  const deleteRowData = qid => {
+  const deleteRowData = oowner => {
     debugFunStart('deleteRowData')
     //
     //  Populate Props
     //
     const props = {
-      sqlTable: SQL_TABLE_QUESTIONS,
-      sqlWhere: `qid = ${qid}`
+      sqlTable: SQL_TABLE_OWNER,
+      sqlWhere: `oowner = '${oowner}'`
     }
     var myPromiseDelete = MyQueryPromise(rowDelete(props))
     //
@@ -232,16 +217,16 @@ export default function RowList() {
     //
     debugLogging('insertRowData data ', data)
     //
-    //  Strip out qid as it will be populated by Insert
+    //  Strip out oowner as it will be populated by Insert
     //
-    let { qid, ...rowData } = data
+    let { ...rowData } = data
     debugLogging('Upsert Database rowData ', rowData)
     //
     //  Build Props
     //
     const props = {
-      sqlTable: SQL_TABLE_QUESTIONS,
-      sqlKeyName: ['qowner', 'qkey'],
+      sqlTable: SQL_TABLE_OWNER,
+      sqlKeyName: ['oowner'],
       sqlRow: rowData
     }
     //
@@ -264,8 +249,8 @@ export default function RowList() {
         //
         //  Get ID
         //
-        const rtn_qid = data[0].qid
-        debugLogging(`Row (${rtn_qid}) UPSERTED in Database`)
+        const rtn_oowner = data[0].oowner
+        debugLogging(`Row (${rtn_oowner}) UPSERTED in Database`)
         //
         //  Update record for edit with returned data
         //
@@ -301,10 +286,12 @@ export default function RowList() {
     //  Populate Props
     //
     const props = {
-      sqlTable: SQL_TABLE_QUESTIONS,
-      sqlWhere: `qid = ${data.qid}`,
+      sqlTable: SQL_TABLE_OWNER,
+      sqlWhere: `oowner = '${data.oowner}'`,
       sqlRow: data
     }
+    debugLogging('sqlWhere', props.sqlWhere)
+    debugLogging('sqlRow', props.sqlRow)
     //
     //  Process promise
     //
@@ -322,10 +309,10 @@ export default function RowList() {
         throw Error
       } else {
         //
-        //  Get QID
+        //  Get oowner
         //
-        const rtn_qid = data[0].qid
-        debugLogging(`Row (${rtn_qid}) UPDATED in Database`)
+        const rtn_oowner = data[0].oowner
+        debugLogging(`Row (${rtn_oowner}) UPDATED in Database`)
       }
       //
       //  Update State - refetch data
@@ -359,7 +346,7 @@ export default function RowList() {
     }
   })
   const [openPopup, setOpenPopup] = useState(false)
-  const [searchType, setSearchType] = useState('qdetail')
+  const [searchType, setSearchType] = useState('oowner')
   const [searchValue, setSearchValue] = useState('')
   //
   //  Notification
@@ -397,39 +384,15 @@ export default function RowList() {
         //
         let itemsFilter = items
         switch (searchType) {
-          case 'qid':
-            itemsFilter = items.filter(x => x.qid === parseInt(searchValue))
+          case 'oowner':
+            itemsFilter = items.filter(x => x.oowner === parseInt(searchValue))
             break
-          case 'qowner':
+          case 'otitle':
             itemsFilter = items.filter(x =>
-              x.qowner.toLowerCase().includes(searchValue.toLowerCase())
+              x.otitle.toLowerCase().includes(searchValue.toLowerCase())
             )
             break
-          case 'qkey':
-            itemsFilter = items.filter(x =>
-              x.qkey.toLowerCase().includes(searchValue.toLowerCase())
-            )
-            break
-          case 'qdetail':
-            itemsFilter = items.filter(x =>
-              x.qdetail.toLowerCase().includes(searchValue.toLowerCase())
-            )
-            break
-          case 'qgroup1':
-            itemsFilter = items.filter(x =>
-              x.qgroup1.toLowerCase().includes(searchValue.toLowerCase())
-            )
-            break
-          case 'qgroup2':
-            itemsFilter = items.filter(x =>
-              x.qgroup2.toLowerCase().includes(searchValue.toLowerCase())
-            )
-            break
-          case 'qgroup3':
-            itemsFilter = items.filter(x =>
-              x.qgroup3.toLowerCase().includes(searchValue.toLowerCase())
-            )
-            break
+
           default:
         }
         debugLogging('itemsFilter ', itemsFilter)
@@ -444,7 +407,7 @@ export default function RowList() {
   //
   const addOrEdit = (row, resetForm) => {
     debugFunStart('addOrEdit')
-    row.qid === 0 ? insertRowData(row) : updateRowData(row)
+    recordForEdit === null ? insertRowData(row) : updateRowData(row)
 
     setNotify({
       isOpen: true,
@@ -467,13 +430,13 @@ export default function RowList() {
   //
   //  Delete Row
   //
-  const onDelete = qid => {
+  const onDelete = oowner => {
     debugFunStart('onDelete')
     setConfirmDialog({
       ...confirmDialog,
       isOpen: false
     })
-    deleteRowData(qid)
+    deleteRowData(oowner)
     setNotify({
       isOpen: true,
       message: 'Deleted Successfully',
@@ -491,11 +454,6 @@ export default function RowList() {
   //  Initial Data Load
   //
   useEffect(() => {
-    OptionsOwner()
-    OptionsGroup1()
-    OptionsGroup2()
-    OptionsGroup3()
-    OptionsRefLinks()
     getRowAllData()
     // eslint-disable-next-line
   }, [])
@@ -511,7 +469,7 @@ export default function RowList() {
   return (
     <>
       <PageHeader
-        title='Questions'
+        title='Owners'
         subTitle='Data Entry and Maintenance'
         icon={<PeopleOutlineTwoToneIcon fontSize='large' />}
       />
@@ -569,14 +527,10 @@ export default function RowList() {
           <TblHead />
           <TableBody>
             {recordsAfterPagingAndSorting().map(row => (
-              <TableRow key={row.qid}>
-                <TableCell>{row.qid}</TableCell>
-                <TableCell>{row.qowner}</TableCell>
-                <TableCell>{row.qkey}</TableCell>
-                <TableCell>{row.qdetail}</TableCell>
-                <TableCell>{row.qgroup1}</TableCell>
-                <TableCell>{row.qgroup2}</TableCell>
-                <TableCell>{row.qgroup3}</TableCell>
+              <TableRow key={row.oowner}>
+                <TableCell>{row.oowner}</TableCell>
+                <TableCell>{row.otitle}</TableCell>
+
                 <TableCell>
                   <MyActionButton
                     color='primary'
@@ -594,7 +548,7 @@ export default function RowList() {
                         title: 'Are you sure to delete this record?',
                         subTitle: "You can't undo this operation",
                         onConfirm: () => {
-                          onDelete(row.qid)
+                          onDelete(row.oowner)
                         }
                       })
                     }}
@@ -609,11 +563,11 @@ export default function RowList() {
         <TblPagination />
       </Paper>
       <Popup
-        title='Question Form'
+        title='Owner Form'
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
       >
-        <RowEntry recordForEdit={recordForEdit} addOrEdit={addOrEdit} />
+        <OwnerEntry recordForEdit={recordForEdit} addOrEdit={addOrEdit} />
       </Popup>
       <Notification notify={notify} setNotify={setNotify} />
       <ConfirmDialog

@@ -10,7 +10,7 @@ import rowSelect from './rowSelect'
 //
 //  Utilities
 //
-import { ValtioStore } from './ValtioStore'
+import { ValtioStore } from '../pages/ValtioStore'
 //
 //  Table
 //

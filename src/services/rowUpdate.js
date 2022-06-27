@@ -28,9 +28,10 @@ async function rowUpdate(props) {
       //
       const method = 'post'
       //
-      //  Strip out qid
+      //  Strip out ID
       //
-      let { qid, ...rowData } = sqlRow
+      let { ...rowData } = sqlRow
+      if (sqlID) delete rowData[sqlID]
       //
       //  Body
       //
@@ -72,7 +73,7 @@ async function rowUpdate(props) {
   //
   //  Deconstruct
   //
-  const { sqlTable, sqlWhere, sqlRow } = props
+  const { sqlTable, sqlWhere, sqlRow, sqlID } = props
   if (g_log1) console.log('props: ', props)
   //
   // Database Update

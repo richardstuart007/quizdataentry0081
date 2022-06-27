@@ -6,20 +6,20 @@ import { Grid } from '@mui/material'
 //
 //  Debug Settings
 //
-import debugSettings from '../debug/debugSettings'
+import debugSettings from '../../debug/debugSettings'
 //
 //  Controls
 //
-import MyButton from '../components/controls/MyButton'
-import MyInput from '../components/controls/MyInput'
-import { useMyForm, MyForm } from '../components/useMyForm'
+import MyButton from '../../components/controls/MyButton'
+import MyInput from '../../components/controls/MyInput'
+import { useMyForm, MyForm } from '../../components/useMyForm'
 //
 //  Services
 //
-import MyQueryPromise from '../services/MyQueryPromise'
-import rowUpsert from '../services/rowUpsert'
-import rowDelete from '../services/rowDelete'
-import rowSelect from '../services/rowSelect'
+import MyQueryPromise from '../../services/MyQueryPromise'
+import rowUpsert from '../../services/rowUpsert'
+import rowDelete from '../../services/rowDelete'
+import rowSelect from '../../services/rowSelect'
 //
 //  Form Initial Values
 //
@@ -99,8 +99,8 @@ let g_errorsUpd
 //
 //  Bidding Table
 //
-const { SQL_TABLE_BIDDING } = require('../services/constants.js')
-const { VALIDATE_ON_CHANGE } = require('../services/constants.js')
+const { SQL_TABLE_BIDDING } = require('../../services/constants.js')
+const { VALIDATE_ON_CHANGE } = require('../../services/constants.js')
 const VALIDBIDS = [
   '1C',
   '1D',

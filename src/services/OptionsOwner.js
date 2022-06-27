@@ -10,7 +10,7 @@ import rowSelect from './rowSelect'
 //
 //  Utilities
 //
-import { ValtioStore } from './ValtioStore'
+import { ValtioStore } from '../pages/ValtioStore'
 //
 //  Table
 //
@@ -79,7 +79,7 @@ const OptionsOwner = () => {
     ]
     data.forEach(item => {
       const itemObj = {
-        id: item.oid,
+        id: item.oowner,
         title: item.otitle
       }
       Options.push(itemObj)

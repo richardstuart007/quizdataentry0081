@@ -7,12 +7,14 @@ import {
   StyledEngineProvider
 } from '@mui/material/styles'
 import { CssBaseline } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles'
 //
-//   Sub Components
+//  Pages
 //
-import RowList from '../pages/RowList'
-import Header from '../components/Header'
+import Control from '../pages/Control'
+//
+//  Common Components
+//
+import Layout from '../components/Layout/Layout'
 //
 //  Global Themes used by the Theme Provider
 //
@@ -44,22 +46,13 @@ const theme = createTheme({
   }
 })
 
-const useStyles = makeStyles({
-  appMain: {
-    width: '100%'
-  }
-})
-
 export default function App() {
-  const classes = useStyles()
-
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        <div className={classes.appMain}>
-          <Header />
-          <RowList />
-        </div>
+        <Layout>
+          <Control />
+        </Layout>
         <CssBaseline />
       </ThemeProvider>
     </StyledEngineProvider>
