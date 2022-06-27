@@ -9,6 +9,7 @@ import makeStyles from '@mui/styles/makeStyles'
 import PersonIcon from '@mui/icons-material/Person'
 import QuizIcon from '@mui/icons-material/Quiz'
 import GroupIcon from '@mui/icons-material/Group'
+import StorageIcon from '@mui/icons-material/Storage'
 //
 //  Libraries
 //
@@ -157,6 +158,20 @@ export default function Navigation() {
             }}
           >
             Reflinks
+          </MyActionButton>
+        ) : null}
+        {/* .......................................................................................... */}
+        {CurrentPage !== 'ServerData' ? (
+          <MyActionButton
+            startIcon={<StorageIcon fontSize='medium' />}
+            variant='contained'
+            color='warning'
+            onClick={() => {
+              ValtioStore.v_PagePrevious = CurrentPage
+              ValtioStore.v_Page = 'ServerData'
+            }}
+          >
+            ServerData
           </MyActionButton>
         ) : null}
         {/* .......................................................................................... */}

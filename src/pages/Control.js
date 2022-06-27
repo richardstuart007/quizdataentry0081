@@ -15,6 +15,7 @@ import ReflinksList from './Reflinks/ReflinksList'
 import Group1List from './Group1/Group1List'
 import Group2List from './Group2/Group2List'
 import Group3List from './Group3/Group3List'
+import ServerData from './ServerData/ServerData'
 //
 //  Utilities
 //
@@ -54,6 +55,8 @@ function Control() {
       return <Group2List />
     case 'Group3List':
       return <Group3List />
+    case 'ServerData':
+      return <ServerData />
     default:
       return <QuestionList />
   }

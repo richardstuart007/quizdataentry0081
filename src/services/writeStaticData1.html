@@ -1,0 +1,57 @@
+<html>
+  <body>
+    <table>
+      <tr>
+        <td><button onclick="saveTextAsFile()">Save Text to File</button></td>
+      </tr>
+    </table>
+
+    <script type="text/javascript">
+      function saveTextAsFile() {
+        const data = [
+          {
+            oowner: 'NZBridge',
+            otitle: 'NZ Bridge'
+          },
+          {
+            oowner: 'public',
+            otitle: 'public'
+          },
+          {
+            oowner: 'Richard',
+            otitle: 'Richard'
+          },
+          {
+            oowner: 'Geo',
+            otitle: 'Geo'
+          }
+        ]
+
+        var textToSave = JSON.stringify(data)
+        var textToSaveAsBlob = new Blob([textToSave], { type: 'text/plain' })
+        var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob)
+        var fileNameToSaveAs = 'Owner.txt'
+
+        console.log('textToSave ', textToSave)
+        console.log('textToSaveAsBlob ', textToSaveAsBlob)
+        console.log('textToSaveAsURL ', textToSaveAsURL)
+        console.log('fileNameToSaveAs ', fileNameToSaveAs)
+
+        var downloadLink = document.createElement('a')
+        console.log('downloadLink ', downloadLink)
+
+        downloadLink.download = fileNameToSaveAs
+        downloadLink.innerHTML = 'Download File'
+        downloadLink.href = textToSaveAsURL
+        downloadLink.onclick = destroyClickedElement
+        downloadLink.style.display = 'none'
+        document.body.appendChild(downloadLink)
+
+        downloadLink.click()
+      }
+      function destroyClickedElement(event) {
+        document.body.removeChild(event.target)
+      }
+    </script>
+  </body>
+</html>

@@ -43,6 +43,5 @@
   },
   "main": "index.js",
   "author": "Richard",
-  "license": "ISC",
-  "description": ""
+  "license": "ISC"
 }

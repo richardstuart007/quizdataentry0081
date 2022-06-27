@@ -11,3 +11,5 @@ exports.SQL_TABLE_GROUP2 = 'group2'
 exports.SQL_TABLE_GROUP3 = 'group3'
 exports.SQL_TABLE_REFLINKS = 'reflinks'
 exports.VALIDATE_ON_CHANGE = false
+exports.STATIC_DATA_PATH =
+  'C:/Users/richa/Documents/GitHub/quiz008/quizdataentry0081/public/StaticData/'
