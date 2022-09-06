@@ -2,7 +2,6 @@
 //  Libraries
 //
 import { useEffect, useState } from 'react'
-import { useSnapshot } from 'valtio'
 import {
   Container,
   Typography,
@@ -125,11 +124,6 @@ const ServerData = () => {
   //  Set Debug State
   //
   debugLogging('Start ServerData')
-  //
-  //  Define the ValtioStore
-  //
-  const snapShot = useSnapshot(ValtioStore)
-
   const filterFn = {
     fn: items => {
       return items
